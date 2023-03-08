@@ -50,26 +50,30 @@
                 }
         }
     </div>
+    <div id="mainCommentId" class="collapsed"></div>
+
     <hr />
     
     <div class="mt-5">
         <form name="mainCommentForm" method="post" 
               onsubmit="mainCommentHandler(event)"
-              >
-            <textarea asp-for="CommentContent"
-                            name ="CommentContent"
-                            class="form-control mb-1"
-                            placeholder="Your comment...">
-                </textarea>
+        >
+            <textarea 
+                      asp-for="@(new Comment().Content)"
+                      class="form-control"
+                      placeholder="Your comment..."
+                      rows="5">
+            </textarea>
             <span asp-validation-for="@(new Comment().Content)" class="text-danger"></span>
 
             <input type="hidden" name="newsId" value="@Model.News.Id" />
-
+            <input type="hidden" name="Date" value="@DateTime.Now" />
             <input type="submit"
                    asp-page-handler="CreateComment"
                    value="Send"
                    class="btn btn-lg btn-outline-primary" />
         </form>
+
     </div>
 </div>
 <div>

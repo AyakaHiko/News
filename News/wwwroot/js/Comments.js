@@ -2,23 +2,23 @@
 
 async function mainCommentHandler(event) {
 
-    //event.preventDefault();
+    event.preventDefault();
 
-    //let form = document.forms.mainCommentForm;
-    //let newsId = form.elements.newsId.value;
-    //let content = form.elements.CommentContent.value;
-    //    const responce = await fetch("/News/Details?handler=CreateComment", {
-    //    method: "POST",
-    //    headers: {
-    //        "Accept": "application/json",
-    //        "Content-Type": "application/json",
-    //    },
-    //        body: JSON.stringify(
-    //            {
-    //                newsId: newsId,
-    //                commentContent: content
-    //        }
-    //        )
-    //});
+    let form = new FormData(document.forms.mainCommentForm);
+    const response = await fetch("?handler=CreateComment", {
+        method: "POST",
+        headers: {
+            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+        },
+            body:
+                new URLSearchParams(form)
+        });
+        if (response) {
+            const writeComment = await response.text();
+            document.getElementById("mainCommentId").innerHTML += writeComment;
+        }
+        else {
+            console.log(response.statusText);
+        }
     
 }

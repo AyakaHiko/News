@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using News.Data;
+using News.Data.Entities;
 
 namespace News.Pages.News
 {
@@ -41,39 +43,22 @@ namespace News.Pages.News
             }
             return Page();
         }
-
-        [BindProperty]
-        public int NewsId { get; set; }
-        [BindProperty]
-        public string CommentContent { get; set; } = default!;
-
-        public async Task<IActionResult> OnPostCreateCommentAsync()
+        
+        [NonAction]
+        public async Task<PartialViewResult> OnPostCreateCommentAsync(Comment comment)
         {
-            var comment = new Data.Entities.Comment
+            if(comment != null)
             {
-                NewsId = NewsId,
-                Content = CommentContent,
-                Date = DateTime.Now
+                _context.Comments.Add(comment);
+                await _context.SaveChangesAsync();
+            }
+
+            return new PartialViewResult()
+            {
+                ViewName = "_Comment",
+                ViewData = new ViewDataDictionary<Comment>(ViewData, comment)
             };
-
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
-            return RedirectToPage("/News/Details", new { id = NewsId });
         }
-
-        //public async Task<IActionResult> OnPostCreateCommentAsync(int newsId, string commentContent)
-        //{
-        //    var comment = new Data.Entities.Comment
-        //    {
-        //        NewsId = newsId,
-        //        Content = commentContent,
-        //        Date = DateTime.Now
-        //    };
-
-        //    _context.Comments.Add(comment);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToPage("/News/Details", new { id = NewsId });
-        //}
     }
     
 
