@@ -9,5 +9,6 @@ namespace News.Data
         }
 
         public DbSet<Entities.News> News => Set<Entities.News>();
+        public DbSet<Entities.Comment> Comments => Set<Entities.Comment>();
     }
 }

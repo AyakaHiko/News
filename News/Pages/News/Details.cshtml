@@ -1,5 +1,7 @@
 ﻿@page
-@model News.DetailsModel
+@using global::News.Data.Entities
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Pages.News.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
@@ -32,6 +34,47 @@
     </dl>
 </div>
 <div>
+    <div>
+        @{
+
+            var count = @Model.News.Comments?.Count ?? 0;
+            var commentLbl = count is > 1 or 0? "comment": "comments";
+            <span id="comments-count">@count</span>
+            <span>@commentLbl</span>
+
+            if (count > 0)
+                foreach (var comment in Model.News.Comments
+                    .OrderBy(c => c.Date))
+                {
+                    <partial name="_Comment" model="comment" />
+                }
+        }
+    </div>
+    <hr />
+    
+    <div class="mt-5">
+        <form name="mainCommentForm" method="post" 
+              onsubmit="mainCommentHandler(event)"
+              >
+            <textarea asp-for="CommentContent"
+                            name ="CommentContent"
+                            class="form-control mb-1"
+                            placeholder="Your comment...">
+                </textarea>
+            <span asp-validation-for="@(new Comment().Content)" class="text-danger"></span>
+
+            <input type="hidden" name="newsId" value="@Model.News.Id" />
+
+            <input type="submit"
+                   asp-page-handler="CreateComment"
+                   value="Send"
+                   class="btn btn-lg btn-outline-primary" />
+        </form>
+    </div>
+</div>
+<div>
     <a asp-page="./Edit" asp-route-id="@Model.News?.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>
+
+<script src="~/js/Comments.js"></script>

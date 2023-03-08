@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using News.Data;
 
@@ -11,9 +12,10 @@ using News.Data;
 namespace News.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    partial class NewsContextModelSnapshot : ModelSnapshot
+    [Migration("20230307165619_comment")]
+    partial class comment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,9 +42,14 @@ namespace News.Migrations
                     b.Property<int>("NewsId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NewsId");
+
+                    b.HasIndex("ParentCommentId");
 
                     b.ToTable("Comments");
                 });
@@ -79,7 +86,18 @@ namespace News.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("News.Data.Entities.Comment", "ParentComment")
+                        .WithMany("ChildComments")
+                        .HasForeignKey("ParentCommentId");
+
                     b.Navigation("News");
+
+                    b.Navigation("ParentComment");
+                });
+
+            modelBuilder.Entity("News.Data.Entities.Comment", b =>
+                {
+                    b.Navigation("ChildComments");
                 });
 
             modelBuilder.Entity("News.Data.Entities.News", b =>

@@ -17,8 +17,9 @@ namespace News.Pages.News
         {
             _context = context;
         }
-
+        
       public Data.Entities.News News { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -27,7 +28,9 @@ namespace News.Pages.News
                 return NotFound();
             }
 
-            var news = await _context.News.FirstOrDefaultAsync(m => m.Id == id);
+            var news = await _context.News
+                .Include(n=> n.Comments)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (news == null)
             {
                 return NotFound();
@@ -38,5 +41,40 @@ namespace News.Pages.News
             }
             return Page();
         }
+
+        [BindProperty]
+        public int NewsId { get; set; }
+        [BindProperty]
+        public string CommentContent { get; set; } = default!;
+
+        public async Task<IActionResult> OnPostCreateCommentAsync()
+        {
+            var comment = new Data.Entities.Comment
+            {
+                NewsId = NewsId,
+                Content = CommentContent,
+                Date = DateTime.Now
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("/News/Details", new { id = NewsId });
+        }
+
+        //public async Task<IActionResult> OnPostCreateCommentAsync(int newsId, string commentContent)
+        //{
+        //    var comment = new Data.Entities.Comment
+        //    {
+        //        NewsId = newsId,
+        //        Content = commentContent,
+        //        Date = DateTime.Now
+        //    };
+
+        //    _context.Comments.Add(comment);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToPage("/News/Details", new { id = NewsId });
+        //}
     }
+    
+
 }
