@@ -23,11 +23,8 @@
                 <input asp-for="News.Content" class="form-control" />
                 <span asp-validation-for="News.Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="News.Date" class="control-label"></label>
-                <input asp-for="News.Date" class="form-control" />
-                <span asp-validation-for="News.Date" class="text-danger"></span>
-            </div>
+            <input type="hidden" name="News.Date" value="@DateTime.Now" />
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -40,5 +37,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

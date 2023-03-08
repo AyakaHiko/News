@@ -1,7 +1,14 @@
-﻿@using Comment = Data.Entities.Comment
+﻿
+
+@using Comment = Data.Entities.Comment
 @model Comment
 
-<div class="mb-3 p-2 border border-1 border-dark">
+<div id="comment@(Model.Id)" class="mb-3 p-2 border border-1 border-dark">
     <p>@Model?.Content</p>
     <small class="">@Model?.Date.ToString()</small>
+    <button 
+        id="delete-comment-btn@(Model.Id)"
+        onclick="deleteComment(event, @Model.Id)" 
+        type="button" 
+        class="btn btn-danger"><i class="fas fa-times"></i></button>
 </div>

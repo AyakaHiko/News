@@ -25,7 +25,7 @@ namespace News.Pages.News
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.News == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -47,17 +47,30 @@ namespace News.Pages.News
         [NonAction]
         public async Task<PartialViewResult> OnPostCreateCommentAsync(Comment comment)
         {
-            if(comment != null)
-            {
-                _context.Comments.Add(comment);
-                await _context.SaveChangesAsync();
-            }
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
 
-            return new PartialViewResult()
+            return new PartialViewResult
             {
                 ViewName = "_Comment",
                 ViewData = new ViewDataDictionary<Comment>(ViewData, comment)
             };
+        }
+
+        public async Task<IActionResult> OnPostDeleteCommentAsync([FromBody] int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            var newsId = comment.NewsId;
+            if (comment != null)
+            {
+                _context.Comments.Remove(comment);
+                await _context.SaveChangesAsync();
+
+                return new OkResult();
+                ;
+            }
+
+            return RedirectToPage("./Details", new {id = newsId});
         }
     }
     
