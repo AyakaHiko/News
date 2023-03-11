@@ -2,13 +2,21 @@
 
 @using Comment = Data.Entities.Comment
 @model Comment
+@if (Model != null)
+{
 
-<div id="comment@(Model.Id)" class="mb-3 p-2 border border-1 border-dark">
-    <p>@Model?.Content</p>
-    <small class="">@Model?.Date.ToString()</small>
-    <button 
-        id="delete-comment-btn@(Model.Id)"
-        onclick="deleteComment(event, @Model.Id)" 
-        type="button" 
-        class="btn btn-danger"><i class="fas fa-times"></i></button>
-</div>
+    <div id="comment@(Model.Id)" class="mb-3 p-2 border border-1 border-dark">
+        <p id="comment-content(@Model?.Id)">@Model?.Content</p>
+        <small class="">@Model?.Date.ToString()</small>
+        <button
+            id="delete-comment-btn@(Model.Id)"
+            onclick="deleteComment(event, @Model.Id)"
+            type="button"
+            class="btn btn-danger"><i class="fas fa-times"></i></button>
+        <button
+            id="edit-comment-btn@(Model.Id)"
+            onclick="editComment(event, @Model.Id)"
+            type="button"
+            class="btn btn-primary"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+}

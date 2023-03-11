@@ -25,9 +25,11 @@ namespace News.Data
 
                 context.News.Add(news);
             }
-
+            
             await context.SaveChangesAsync();
 
         }
+
+        
     }
 }

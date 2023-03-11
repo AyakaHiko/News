@@ -37,31 +37,28 @@
     <div>
         <span id="comments-count"></span>
         <span id="comments-label"></span>
-        <script src="~/js/Comments.js" asp-append-version="true"></script>
+        <script src="~/js/Comments.js"></script>
         <script>
-
             var count = @Model.News.Comments?.Count ?? 0;
             commentCount(count);
         </script>
         @{
-            if(@Model.News.Comments!=null)
-            foreach (var comment in Model.News.Comments
-                    .OrderBy(c => c.Date))
+            if (@Model.News.Comments != null)
+                foreach (var comment in Model.News.Comments
+                .OrderBy(c => c.Date))
                 {
-                    <partial name="_Comment" model="comment"/>
+                    <partial name="_Comment" model="comment" />
                 }
         }
     </div>
     <div id="mainCommentId" class="collapsed"></div>
 
     <hr />
-    
+
     <div class="mt-5">
-        <form name="mainCommentForm" method="post" 
-              onsubmit="mainCommentHandler(event)"
-        >
-            <textarea 
-                      asp-for="@(new Comment().Content)"
+        <form name="mainCommentForm" method="post"
+              onsubmit="mainCommentHandler(event)">
+            <textarea asp-for="@(new Comment().Content)" id="comments-area"
                       class="form-control"
                       placeholder="Your comment..."
                       rows="5">
